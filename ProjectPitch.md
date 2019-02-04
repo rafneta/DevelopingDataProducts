@@ -5,21 +5,79 @@ date: 2019-February-04
 autosize: true
 font-family: 'Helvetica'
 
-First Slide
+
 ========================================================
+left: 70%
+An application is generated in **Shiny**, using the **quantmod** package to visualize the shares of the American stock exchange of the companies shown on the right. The data is extracted from _yahoo_, these data are from *2019-01-01* to *2019-02-04*. The application can be found in the following [link](https://rafneta.shinyapps.io/Project/)
 
-For more details on authoring R presentations please visit <https://support.rstudio.com/hc/en-us/articles/200486468>.
+<div align="center">
+<img src="app.png" width=60% height=280>
+</div>
 
-- Bullet 1
-- Bullet 2
-- Bullet 3
+***
+<small>
+- Apple
+- CISCO
+- IBM
+- Facebook
+- Twitter
+- Microsoft
+- Google
+</small>
 
-Slide With Code
+The codes _ui.R_ and _server.R_ can be found in the following [link](https://github.com/rafneta/DevelopingDataProducts) of github, we show the code in the next slides
+
+Code ui.R
 ========================================================
+<style>
+.reveal {
+   font-size: 12px;
+}</style>
 
 
+```r
+library(shiny)
+# Define UI for application that draws a histogram
+shinyUI(fluidPage(
+  titlePanel("Shares in American Stock market"),
+  sidebarLayout(
+    sidebarPanel(
+p("You can view the shares in the American stock
+exchange of the different companies available from the 
+beginning of the year 2019 until 2019-02-04, the data 
+is extracted from yahoo. The code u1.r and server.R 
+  are in the following link",
+  style = "font-family: 'times'; font-si16pt"),
+tags$div(
+tags$a(href="https://github.com/rafneta/DevelopingDataProducts",
+target = "_blank","Github Repository")),
+      br(),
+       selectInput("Share",
+          label = "Share",choices = c("Apple"= "AAPL", "CISCO"= "CSCO",
+"IBM"= "IBM", "Facebook" = "FB", "Twitter" = "TWTR", "Microsoft" ="MSFT","Google" = "GOOG"))),
+    mainPanel("Shares in American Stock market",
+       plotOutput("grafico")  ))))
+```
 
-Slide With Plot
+Code server.R
 ========================================================
+<style>
+.reveal {
+   font-size: 12px;
+}</style>
 
+
+```r
+library(shiny)
+library(quantmod)
+
+# Define server logic required to draw a histogram
+shinyServer(function(input, output) {
+  output$grafico <- renderPlot({
+    stockdata <- getSymbols(input$Share, src = "yahoo",
+                          from = "2019-01-01", to = "2019-02-04",
+                          auto.assign = FALSE)
+    candleChart(stockdata, name = input$Share)
+  })})
+```
 
